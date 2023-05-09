@@ -1,0 +1,43 @@
+body {
+    background-color: azure;
+}
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+}
+.horizontal {
+    display: flex;
+    flex-direction: row;
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hide {
+    display: none;
+}
+#disconnect-btn {
+    width: 10em;
+    height: 2em;
+    background-color: deepskyblue;
+    margin-right: 5em;
+}
+.sizetextinput {
+    font-size: 1.5em;
+    width: 10em;
+    height: 2em
+}
+#graph-div {
+    margin-bottom: 50px;
+}
+.margedroite {
+    margin-right: 50px;
+}
+
+/* #log {
+    width: 5em;
+    height: 2em;
+    font-size: 1.5em;
+} */

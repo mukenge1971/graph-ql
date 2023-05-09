@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="script.js"></script>
+    <title>graphql</title>
+</head>
+<body>
+    
+    <div id="log" class="center vertical">
+        <label for="nickmail">Pseudo ou Email</label>
+        <input id="nickmail" type="text" >
+        <label for="pass">Mot de passe</label>
+        <input id="pass" type="password" >
+        <button id="logger">Submit</button>
+    </div>
+    <div id="profil" class="vertical  hide">
+        <div id="head" class="horizontal">
+            <button type="button" id="disconnect-btn">Disconnect</button>
+            <div id="welcome" class="sizetextinput"></div>
+            <div id="ratio" class="margedroite"></div>
+            <div id="level" class="sizetextinput"></div>
+        </div>
+        <div id="graph-div" class="horizontal">
+            <svg id="xp-graph" width="1000" height="800"></svg>
+            <div id="case1" class="cases"></div>
+        </div>
+        <div id="skills">
+            
+        </div>
+    </div>
+    
+</body>
+</html>
