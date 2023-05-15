@@ -108,7 +108,7 @@ function getData() {
         // Création de l'élément <svg> pour la barre horizontale
 const ratios = document.getElementById("ratio")
 const svgratio = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-svgratio.setAttribute("width", "400");
+svgratio.setAttribute("width", "800");
 svgratio.setAttribute("height", "50");
 
 ratios.appendChild(svgratio);
@@ -159,10 +159,10 @@ svgratio.appendChild(rect2);
 // Affichage de la valeur du ratio ou du pourcentage au-dessus de la barre
 const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
 text.setAttribute("x", "200");
-text.setAttribute("y", "23");
+text.setAttribute("y", "25");
 text.setAttribute("font-size", "20");
 text.setAttribute("text-anchor", "middle");
-text.textContent = "Ratio : "+ ratio.toString();
+text.textContent = "Ratio : "+ ratio.toFixed(2).toString();
 svgratio.appendChild(text);
 const levels = document.getElementById("level")
 levels.innerText = "Level : " + level.toString()
@@ -216,27 +216,6 @@ xAxis.setAttribute("stroke", axisColor);
 xAxis.setAttribute("stroke-width", axisWidth);
 svg.appendChild(xAxis);
 
-// Ajout des graduations et des labels sur l'axe X
-for (let i = 1; i <= xMax; i++) {
-  const x = origin.x + i * 50;
-  const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
-  tick.setAttribute("x1", x);
-  tick.setAttribute("y1", origin.y);
-  tick.setAttribute("x2", x);
-  tick.setAttribute("y2", origin.y - tickLength);
-  tick.setAttribute("stroke", axisColor);
-  tick.setAttribute("stroke-width", axisWidth);
-  svg.appendChild(tick);
-
-  const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  label.setAttribute("x", x);
-  label.setAttribute("y", origin.y + tickLabelOffset);
-  label.setAttribute("font-size", tickLabelSize);
-  label.setAttribute("text-anchor", "middle");
-  label.textContent = tickLabels[i];
-  svg.appendChild(label);
-}
-
 // Ajout du label de l'axe X
 const xAxisLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
 xAxisLabel.setAttribute("x", origin.x + xMax * 50 / 2);
@@ -256,27 +235,6 @@ yAxis.setAttribute("stroke", axisColor);
 yAxis.setAttribute("stroke-width", axisWidth);
 svg.appendChild(yAxis);
 
-// Ajout des graduations et des labels sur l'axe Y
-for (let i = 1; i <= yMax / 50; i++) {
-    const y = origin.y - i * 50;
-    const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    tick.setAttribute("x1", origin.x);
-    tick.setAttribute("y1", y);
-    tick.setAttribute("x2", origin.x + tickLength);
-    tick.setAttribute("y2", y);
-    tick.setAttribute("stroke", axisColor);
-    tick.setAttribute("stroke-width", axisWidth);
-    svg.appendChild(tick);
-    
-    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    label.setAttribute("x", origin.x - tickLabelOffset);
-    label.setAttribute("y", y + tickLabelSize / 3);
-    label.setAttribute("font-size", tickLabelSize);
-    label.setAttribute("text-anchor", "end");
-    label.textContent = i;
-    svg.appendChild(label);
-    }
-
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
 // Construction de la chaîne de commandes SVG à partir des points
@@ -294,40 +252,49 @@ for (let i = 1; i <= yMax / 50; i++) {
     path.setAttribute("d", d);
     path.setAttribute("stroke", "black");
     path.setAttribute("fill", "none");
+    const textxp = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    textxp.setAttribute("x", points[points.length - 1].x);
+    textxp.setAttribute("y", points[points.length - 1].y);
+    textxp.setAttribute("font-size", "15");
+    textxp.setAttribute("text-anchor", "middle");
+    textxp.textContent = "Total Xp : "+ xp_cumul[xp_cumul.length - 1].toString();
 
     // Ajout de la courbe à l'élément SVG
     svg.appendChild(path)
+    svg.appendChild(textxp)
+
+    // Affichage des skills
     const skills = document.getElementById("skills")
     for (const [key, value] of Object.entries(skill)) {
         const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-svg.setAttribute("width", "200");
-svg.setAttribute("height", "200");
-const text1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
-text1.setAttribute("x", "100");
-text1.setAttribute("y", "10");
-text1.setAttribute("font-size", "15");
-text1.setAttribute("text-anchor", "middle");
-text1.textContent = "Skill-"+key;
-svg.appendChild(text1);
-const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-circle.setAttribute("cx", "100");
-circle.setAttribute("cy", "100");
-circle.setAttribute("r", "80");
-circle.setAttribute("fill", "none");
-circle.setAttribute("stroke", "black");
-//circle.setAttribute("stroke-width", "20");
-svg.appendChild(circle);
+        svg.setAttribute("width", "200");
+        svg.setAttribute("height", "220");
+        const text1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text1.setAttribute("x", "100");
+        text1.setAttribute("y", "10");
+        text1.setAttribute("font-size", "15");
+        text1.setAttribute("text-anchor", "middle");
+        text1.textContent = "Skill-"+key+" : "+ value.toString()+"%";
+        svg.appendChild(text1);
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", "100");
+        circle.setAttribute("cy", "100");
+        circle.setAttribute("r", "80");
+        circle.setAttribute("fill", "none");
+        circle.setAttribute("stroke", "black");
+        //circle.setAttribute("stroke-width", "20");
+        svg.appendChild(circle);
 
-const percentage = value;
-const angle = percentage / 100 * 360;
-const startX = 100 + Math.sin(angle / 180 * Math.PI) * 80;
-const startY = 100 - Math.cos(angle / 180 * Math.PI) * 80;
+        const percentage = value;
+        const angle = percentage / 100 * 360;
+        const startX = 100 + Math.sin(angle / 180 * Math.PI) * 80;
+        const startY = 100 - Math.cos(angle / 180 * Math.PI) * 80;
 
-const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-path.setAttribute("d", `M 100,100 L 100,20 A 80,80 0 ${angle > 180 ? "1" : "0"},1 ${startX},${startY} z`);
-path.setAttribute("fill", "blue");
-svg.appendChild(path);
-skills.appendChild(svg)
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", `M 100,100 L 100,20 A 80,80 0 ${angle > 180 ? "1" : "0"},1 ${startX},${startY} z`);
+        path.setAttribute("fill", "blue");
+        svg.appendChild(path);
+        skills.appendChild(svg)
     }
     } 
     
