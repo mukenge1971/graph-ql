@@ -113,28 +113,7 @@ svgratio.setAttribute("height", "50");
 
 ratios.appendChild(svgratio);
 const talon = 2;
-// Définition de la largeur de la barre en fonction du ratio ou du pourcentage
-// const barWidth = ratio * 400;
-// const barWidth2 =  400;
 
-
-// // Création de l'élément <rect> pour la barre
-// const rect2 = document.createElementNS("http://www.w3.org/2000/svg", "rect2");
-// rect2.setAttribute("x", "0");
-// rect2.setAttribute("y", "10");
-// rect2.setAttribute("width", barWidth2.toString());
-// rect2.setAttribute("height", "20");
-// rect2.setAttribute("stroke","black")
-// rect2.setAttribute("fill", "#f1f1f1");
-// svgratio.appendChild(rect2);
-// const rect1 = document.createElementNS("http://www.w3.org/2000/svg", "rect1");
-// rect1.setAttribute("x", "0");
-// rect1.setAttribute("y", "10");
-// rect1.setAttribute("width", barWidth.toString());
-// rect1.setAttribute("height", "20");
-// rect1.setAttribute("stroke","black")
-// rect1.setAttribute("fill", "blue");
-// svgratio.appendChild(rect1);
 
 const barWidth = 400-talon ;
 const barHeight = 30;
@@ -187,53 +166,64 @@ levels.innerText = "Level : " + level.toString()
         }
         console.log("skill",skill);
     let points = []
+    var step = window.innerWidth/100
+    console.log("step", step);
     for (var i = 0; i < xp_cumul.length; i++) {
-        const point = {x: 50 + 10*i, y: 800 - xp_cumul[i]*1/1600}
+        const point = {x: 50 + step*i, y: 800 - xp_cumul[i]*1/1600}
         points.push(point)
 
     }
     console.log("points",points);
-    const svg = document.getElementById("xp-graph");
+    //const svg = document.getElementById("xp-graph");
+    const graphdiv = document.getElementById("graphdiv")
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+
+    svg.setAttribute("id","xp-graph")
+    svg.setAttribute("width", (0.9*window.innerWidth).toString());
+    svg.setAttribute("height", "800");
     const axisColor = "black";
 const axisWidth = 1;
 const tickLength = 5;
 const tickLabelOffset = 10;
 const tickLabelSize = 10;
 const axisLabelSize = 12;
-const tickLabels = ["", "1", "2", "3", "4", "5", "6"];
 const axisLabels = ["X", "Y"];
 const origin = { x: 50, y: 800 };
-const xMax = 18;
-const yMax = 700;
+var xMax = 100*step;
+var yMax = 700;
+window.onresize = sizing
+function sizing() {
+    points = []
+    svg.innerHTML = ""
+    svg.setAttribute("width", (0.9*window.innerWidth).toString());
+    svg.setAttribute("height", "800");
+    step = window.innerWidth/100
+    console.log("step", step);
+    for (var i = 0; i < xp_cumul.length; i++) {
+        const point = {x: 50 + step*i, y: 800 - xp_cumul[i]*1/1600}
+        points.push(point)
 
-// Création de l'axe X
-const xAxis = document.createElementNS("http://www.w3.org/2000/svg", "line");
-xAxis.setAttribute("x1", origin.x);
-xAxis.setAttribute("y1", origin.y);
-xAxis.setAttribute("x2", origin.x + xMax * 50);
-xAxis.setAttribute("y2", origin.y);
-xAxis.setAttribute("stroke", axisColor);
-xAxis.setAttribute("stroke-width", axisWidth);
-svg.appendChild(xAxis);
+    }
+    xMax = 100*step;
+    yMax = 700;
 
-// Ajout du label de l'axe X
-const xAxisLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
-xAxisLabel.setAttribute("x", origin.x + xMax * 50 / 2);
-xAxisLabel.setAttribute("y", origin.y + 2 * tickLabelOffset);
-xAxisLabel.setAttribute("font-size", axisLabelSize);
-xAxisLabel.setAttribute("text-anchor", "middle");
-xAxisLabel.textContent = axisLabels[0];
-svg.appendChild(xAxisLabel);
+    const xAxis = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    xAxis.setAttribute("x1", origin.x);
+    xAxis.setAttribute("y1", origin.y);
+    xAxis.setAttribute("x2", origin.x + xMax);
+    xAxis.setAttribute("y2", origin.y);
+    xAxis.setAttribute("stroke", axisColor);
+    xAxis.setAttribute("stroke-width", axisWidth);
+    svg.appendChild(xAxis);
 
-// Création de l'axe Y
-const yAxis = document.createElementNS("http://www.w3.org/2000/svg", "line");
-yAxis.setAttribute("x1", origin.x);
-yAxis.setAttribute("y1", origin.y);
-yAxis.setAttribute("x2", origin.x);
-yAxis.setAttribute("y2", origin.y - yMax);
-yAxis.setAttribute("stroke", axisColor);
-yAxis.setAttribute("stroke-width", axisWidth);
-svg.appendChild(yAxis);
+    const yAxis = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    yAxis.setAttribute("x1", origin.x);
+    yAxis.setAttribute("y1", origin.y);
+    yAxis.setAttribute("x2", origin.x);
+    yAxis.setAttribute("y2", origin.y - yMax);
+    yAxis.setAttribute("stroke", axisColor);
+    yAxis.setAttribute("stroke-width", axisWidth);
+    svg.appendChild(yAxis);
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
@@ -250,7 +240,7 @@ svg.appendChild(yAxis);
 
 // Définition des propriétés de la courbe
     path.setAttribute("d", d);
-    path.setAttribute("stroke", "black");
+    path.setAttribute("stroke", "blue");
     path.setAttribute("fill", "none");
     const textxp = document.createElementNS("http://www.w3.org/2000/svg", "text");
     textxp.setAttribute("x", points[points.length - 1].x);
@@ -262,6 +252,68 @@ svg.appendChild(yAxis);
     // Ajout de la courbe à l'élément SVG
     svg.appendChild(path)
     svg.appendChild(textxp)
+    graphdiv.appendChild(svg)
+
+}
+
+// Création de l'axe X
+    const xAxis = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    xAxis.setAttribute("x1", origin.x);
+    xAxis.setAttribute("y1", origin.y);
+    xAxis.setAttribute("x2", origin.x + xMax);
+    xAxis.setAttribute("y2", origin.y);
+    xAxis.setAttribute("stroke", axisColor);
+    xAxis.setAttribute("stroke-width", axisWidth);
+    svg.appendChild(xAxis);
+
+// Ajout du label de l'axe X
+// const xAxisLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+// xAxisLabel.setAttribute("x", origin.x + xMax * 50 / 2);
+// xAxisLabel.setAttribute("y", origin.y + 2 * tickLabelOffset);
+// xAxisLabel.setAttribute("font-size", axisLabelSize);
+// xAxisLabel.setAttribute("text-anchor", "middle");
+// xAxisLabel.textContent = axisLabels[0];
+// svg.appendChild(xAxisLabel);
+
+// Création de l'axe Y
+    const yAxis = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    yAxis.setAttribute("x1", origin.x);
+    yAxis.setAttribute("y1", origin.y);
+    yAxis.setAttribute("x2", origin.x);
+    yAxis.setAttribute("y2", origin.y - yMax);
+    yAxis.setAttribute("stroke", axisColor);
+    yAxis.setAttribute("stroke-width", axisWidth);
+    svg.appendChild(yAxis);
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+// Construction de la chaîne de commandes SVG à partir des points
+    let d = "";
+    for (let i = 0; i < points.length; i++) {
+    const point = points[i];
+    if (i === 0) {
+        d += "M " + point.x + " " + point.y + " ";
+    } else {
+        d += "L " + point.x + " " + point.y + " ";
+    }
+    }
+
+// Définition des propriétés de la courbe
+    path.setAttribute("d", d);
+    path.setAttribute("stroke", "blue");
+    path.setAttribute("fill", "none");
+    const textxp = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    textxp.setAttribute("x", points[points.length - 1].x);
+    textxp.setAttribute("y", points[points.length - 1].y);
+    textxp.setAttribute("font-size", "15");
+    textxp.setAttribute("text-anchor", "middle");
+    textxp.textContent = "Total Xp : "+ xp_cumul[xp_cumul.length - 1].toString();
+
+    // Ajout de la courbe à l'élément SVG
+    svg.appendChild(path)
+    svg.appendChild(textxp)
+    graphdiv.appendChild(svg)
+
 
     // Affichage des skills
     const skills = document.getElementById("skills")

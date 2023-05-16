@@ -19,17 +19,21 @@ body {
     display: none;
 }
 #disconnect-btn {
-    width: 10em;
+    width: 8em;
     height: 2em;
-    background-color: deepskyblue;
     margin-right: 5em;
+    font-size: 1.5em;
+
+    background-color: cornflowerblue;
 }
 .sizetextinput {
     font-size: 1.5em;
     width: 10em;
     height: 2em
 }
-#graph-div {
+#graphdiv {
+    width: 100%;
+    height: 900px;
     margin-bottom: 50px;
 }
 .margedroite {
