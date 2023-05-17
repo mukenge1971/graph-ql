@@ -31,6 +31,7 @@ let up = 0
 let total_xp = 0
 var ratio
 var skill = {}
+var xp = []
 var xp_cumul = []
 var xp_svg = []
 var level = 0
@@ -87,6 +88,7 @@ function getData() {
         console.log("transaction",transa);
         for (var el of transa) {
             if (el.type == "xp") {
+                xp.push(el.amount)
                 total_xp += el.amount
                 xp_cumul.push(total_xp)
             } else if (el.type == "up") {
@@ -166,11 +168,15 @@ levels.innerText = "Level : " + level.toString()
         }
         console.log("skill",skill);
     let points = []
+    let xpoints = []
+
     var step = window.innerWidth/100
     console.log("step", step);
     for (var i = 0; i < xp_cumul.length; i++) {
+        const xpoint = {x: 50 + step*i, y: 800 - xp[i]/1600}
         const point = {x: 50 + step*i, y: 800 - xp_cumul[i]*1/1600}
         points.push(point)
+        xpoints.push(xpoint)
 
     }
     console.log("points",points);
@@ -201,7 +207,9 @@ function sizing() {
     console.log("step", step);
     for (var i = 0; i < xp_cumul.length; i++) {
         const point = {x: 50 + step*i, y: 800 - xp_cumul[i]*1/1600}
+        const xpoint = {x: 50 + step*i, y: 800 - xp[i]/1600}
         points.push(point)
+        xpoints.push(xpoint)
 
     }
     xMax = 100*step;
@@ -226,15 +234,24 @@ function sizing() {
     svg.appendChild(yAxis);
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
 
 // Construction de la chaîne de commandes SVG à partir des points
     let d = "";
+    let d2 = ""
     for (let i = 0; i < points.length; i++) {
     const point = points[i];
+    const xpoint = xpoints[i];
+
     if (i === 0) {
         d += "M " + point.x + " " + point.y + " ";
+        d2 += "M " + xpoint.x + " " + xpoint.y + " ";
+
     } else {
         d += "L " + point.x + " " + point.y + " ";
+        d2 += "M " + xpoint.x + " " + xpoint.y + " ";
+
     }
     }
 
@@ -242,6 +259,9 @@ function sizing() {
     path.setAttribute("d", d);
     path.setAttribute("stroke", "blue");
     path.setAttribute("fill", "none");
+    path2.setAttribute("d", d2);
+    path2.setAttribute("stroke", "red");
+    path2.setAttribute("fill", "none");
     const textxp = document.createElementNS("http://www.w3.org/2000/svg", "text");
     textxp.setAttribute("x", points[points.length - 1].x);
     textxp.setAttribute("y", points[points.length - 1].y);
@@ -249,9 +269,18 @@ function sizing() {
     textxp.setAttribute("text-anchor", "middle");
     textxp.textContent = "Total Xp : "+ xp_cumul[xp_cumul.length - 1].toString();
 
+    const textxp2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    textxp2.setAttribute("x", xpoints[xpoints.length - 1].x);
+    textxp2.setAttribute("y", xpoints[xpoints.length - 1].y-20);
+    textxp2.setAttribute("font-size", "15");
+    textxp2.setAttribute("text-anchor", "middle");
+    textxp2.textContent = "Xp par projet : ";
+
     // Ajout de la courbe à l'élément SVG
     svg.appendChild(path)
+    svg.appendChild(path2)
     svg.appendChild(textxp)
+    svg.appendChild(textxp2)
     graphdiv.appendChild(svg)
 
 }
@@ -286,15 +315,24 @@ function sizing() {
     svg.appendChild(yAxis);
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
 // Construction de la chaîne de commandes SVG à partir des points
     let d = "";
+    let d2 = ""
+
     for (let i = 0; i < points.length; i++) {
     const point = points[i];
+    const xpoint = xpoints[i];
+
     if (i === 0) {
         d += "M " + point.x + " " + point.y + " ";
+        d2 += "M " + xpoint.x + " " + xpoint.y + " ";
+
     } else {
         d += "L " + point.x + " " + point.y + " ";
+        d2 += "L " + xpoint.x + " " + xpoint.y + " ";
+
     }
     }
 
@@ -302,6 +340,9 @@ function sizing() {
     path.setAttribute("d", d);
     path.setAttribute("stroke", "blue");
     path.setAttribute("fill", "none");
+    path2.setAttribute("d", d2);
+    path2.setAttribute("stroke", "red");
+    path2.setAttribute("fill", "none");
     const textxp = document.createElementNS("http://www.w3.org/2000/svg", "text");
     textxp.setAttribute("x", points[points.length - 1].x);
     textxp.setAttribute("y", points[points.length - 1].y);
@@ -309,9 +350,19 @@ function sizing() {
     textxp.setAttribute("text-anchor", "middle");
     textxp.textContent = "Total Xp : "+ xp_cumul[xp_cumul.length - 1].toString();
 
+    const textxp2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    textxp2.setAttribute("x", xpoints[xpoints.length - 1].x);
+    textxp2.setAttribute("y", xpoints[xpoints.length - 1].y-20);
+    textxp2.setAttribute("font-size", "15");
+    textxp2.setAttribute("text-anchor", "middle");
+    textxp2.textContent = "Xp par projet";
+
+
     // Ajout de la courbe à l'élément SVG
     svg.appendChild(path)
+    svg.appendChild(path2)
     svg.appendChild(textxp)
+    svg.appendChild(textxp2)
     graphdiv.appendChild(svg)
 
 
